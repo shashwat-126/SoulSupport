@@ -12,30 +12,27 @@ if (process.env.TRUST_PROXY) {
   app.set('trust proxy', process.env.TRUST_PROXY === 'true' ? 1 : process.env.TRUST_PROXY);
 }
 
-const configuredOrigins = new Set(
-  (process.env.FRONTEND_URL || 'http://localhost:3000')
-    .split(',')
-    .map((origin) => origin.trim())
-    .filter(Boolean)
-);
+const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:3000')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 
 // Security middleware
 app.use(helmet());
 app.use(
   cors({
     origin(origin, callback) {
+      // Allow requests with no origin (Postman, curl, server-to-server)
       if (!origin) {
         return callback(null, true);
       }
 
-      const isConfiguredOrigin = configuredOrigins.has(origin);
-      const isLocalhostDevPort = /^http:\/\/localhost:\d+$/.test(origin);
-
-      if (isConfiguredOrigin || isLocalhostDevPort) {
+      if (allowedOrigins.includes(origin) || /^http:\/\/localhost:\d+$/.test(origin)) {
         return callback(null, true);
       }
 
-      return callback(new Error(`CORS blocked for origin: ${origin}`));
+      console.warn(`CORS: blocked request from origin: ${origin}`);
+      return callback(null, false);
     },
     credentials: true,
   })

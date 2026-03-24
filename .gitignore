@@ -30,6 +30,7 @@ coverage/
 
 # Misc
 .vercel
+vercel-import.env
 
 # Environment variables (NEVER commit real secrets)
 .env

@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Backend API for SoulSupport online therapy platform",
   "main": "src/server.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "build": "node -e \"require('./src/app'); console.log('Backend build check passed')\"",
     "start": "node src/server.js",
