@@ -1,5 +1,4 @@
 const express = require('express');
-const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const errorHandler = require('./middlewares/error.middleware');
@@ -18,35 +17,29 @@ const allowedOrigins = [
   'http://localhost:3000',
 ];
 
-console.log('[CORS] Allowed origins:', allowedOrigins);
+// Manual CORS middleware — bypasses cors package (incompatible with Express 5)
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+
+  if (origin && allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  } else if (origin) {
+    console.warn(`[CORS] Blocked: ${origin}`);
+  }
+
+  // Handle preflight
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+
+  next();
+});
 
 // Security middleware
 app.use(helmet());
-app.use(
-  cors({
-    origin(origin, callback) {
-      // Allow requests with no origin (Postman, curl, server-to-server)
-      if (!origin) {
-        return callback(null, true);
-      }
-
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-
-      // Allow any localhost port in development
-      if (/^http:\/\/localhost:\d+$/.test(origin)) {
-        return callback(null, true);
-      }
-
-      console.warn(`[CORS] Blocked: ${origin}`);
-      return callback(null, false);
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  })
-);
 
 // Rate limiting
 app.use('/api/', apiLimiter);
