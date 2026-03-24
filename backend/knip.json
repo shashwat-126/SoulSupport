@@ -1,0 +1,10 @@
+{
+  "$schema": "https://unpkg.com/knip@latest/schema.json",
+  "project": ["src/**/*.js", "tests/**/*.js"],
+  "ignoreIssues": {
+    "src/controllers/**/*.js": ["exports", "nsExports"],
+    "src/routes/**/*.js": ["exports", "nsExports"],
+    "src/validators/**/*.js": ["exports", "nsExports"],
+    "src/middlewares/**/*.js": ["exports", "nsExports"]
+  }
+}

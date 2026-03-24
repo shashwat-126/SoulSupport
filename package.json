@@ -1,0 +1,21 @@
+{
+  "name": "soulsupport",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Root scripts for SoulSupport monorepo",
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev:backend": "npm --prefix backend run dev",
+    "prebuild": "node scripts/stop-preview.cjs",
+    "build": "npm run build --prefix backend && npm run build --prefix frontend",
+    "test": "npm run test --prefix backend && npm run test --prefix frontend",
+    "lint": "npm run lint --prefix frontend",
+    "preview": "npm run start --prefix frontend"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.27",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^4.2.2"
+  }
+}

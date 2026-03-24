@@ -1,0 +1,47 @@
+{
+  "name": "soulsupport-backend",
+  "version": "1.0.0",
+  "description": "Backend API for SoulSupport online therapy platform",
+  "main": "src/server.js",
+  "scripts": {
+    "build": "node -e \"require('./src/app'); console.log('Backend build check passed')\"",
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "jest --runInBand --coverage",
+    "test:watch": "jest --watchAll --verbose",
+    "test:ci": "jest --runInBand --coverage"
+  },
+  "keywords": [
+    "therapy",
+    "mental-health",
+    "online-therapy"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "6.0.0",
+    "cloudinary": "2.9.0",
+    "cors": "2.8.6",
+    "dotenv": "17.3.1",
+    "express": "5.2.1",
+    "express-rate-limit": "8.3.1",
+    "helmet": "8.1.0",
+    "joi": "18.0.2",
+    "jsonwebtoken": "9.0.3",
+    "mongoose": "9.3.0",
+    "morgan": "1.10.1",
+    "multer": "2.1.1",
+    "node-cron": "^4.2.1",
+    "nodemailer": "8.0.2",
+    "sanitize-html": "^2.17.1"
+  },
+  "devDependencies": {
+    "jest": "30.3.0",
+    "nodemon": "3.1.14",
+    "supertest": "7.2.2"
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "type": "commonjs"
+}
