@@ -132,37 +132,52 @@ cd backend && npm run dev
 cd frontend && npm run dev
 ```
 
-## Docker Deployment
+## Docker Deployment (Production-Ready / Windows Compatible)
+
+This project includes a fully optimized, production-ready Docker setup. It uses Next.js `standalone` output for a minimal frontend footprint, a non-root user for the backend, and Nginx as a reverse proxy.
 
 ### Quick Start with Docker Compose
 
-1. Copy the deployment environment file:
+**Important for Windows Users:** Please ensure **Docker Desktop** is running and WSL2 integration is enabled before executing these commands.
 
-```bash
-cp .env.deploy.example .env
-# Edit .env with your production secrets
-```
+1. **Configure Environment Variables:**
+   Copy the deployment environment file to the root directory:
 
-2. Build and start services:
+   ```bash
+   cp .env.deploy.example .env
+   # Open .env and add your production secrets (JWT_SECRET, Mongo credentials, etc.)
+   ```
 
-```bash
-docker compose up -d
-```
+2. **Build and Start Services:**
+   Run the following command to build the optimized images and start all containers in detached mode:
 
-3. Access the application:
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:5007/api
-   - Nginx Proxy: http://localhost:80
+   ```bash
+   docker-compose down -v  # (Optional) Cleans up any old volumes
+   docker-compose up --build -d
+   ```
 
-### Services
+3. **Verify the Application:**
+   Once the containers are up, you can check their health status by running:
+   ```bash
+   docker-compose ps
+   ```
+   *All services (frontend, backend, mongodb, redis) should report as `(healthy)`.*
 
-| Service  | Port  | Description            |
-| -------- | ----- | ---------------------- |
-| frontend | 3000  | Next.js application    |
-| backend  | 5007  | Express API server     |
-| mongodb  | 27017 | MongoDB database       |
-| redis    | 6379  | Redis cache (optional) |
-| nginx    | 80    | Reverse proxy          |
+4. **Access the Application:**
+   Because port 80 is often taken by Windows services (like IIS or Skype), **Nginx is mapped to port 8080**:
+   - **Frontend UI:** [http://localhost:8080](http://localhost:8080)
+   - **Backend API Base URL:** [http://localhost:8080/api](http://localhost:8080/api)
+   - **API Health Check:** [http://localhost:8080/api/health](http://localhost:8080/api/health)
+
+### Docker Services
+
+| Service  | Internal Port | External Port | Description |
+| -------- | ------------- | ------------- | ----------- |
+| `frontend` | 3000 | - | Next.js standalone application |
+| `backend` | 5007 | 5007 | Express Node.js API server |
+| `mongodb` | 27017 | 27017 | MongoDB database |
+| `redis` | 6379 | 6379 | Redis cache (optional) |
+| `nginx` | 80 | **8080** | Reverse proxy for frontend and backend |
 
 ## Environment Variables
 
