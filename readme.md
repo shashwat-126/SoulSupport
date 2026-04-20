@@ -132,13 +132,13 @@ cd backend && npm run dev
 cd frontend && npm run dev
 ```
 
-## Docker Deployment (Production-Ready / Windows Compatible)
+## Docker Deployment (Production-Ready)
 
 This project includes a fully optimized, production-ready Docker setup. It uses Next.js `standalone` output for a minimal frontend footprint, a non-root user for the backend, and Nginx as a reverse proxy.
 
 ### Quick Start with Docker Compose
 
-**Important for Windows Users:** Please ensure **Docker Desktop** is running and WSL2 integration is enabled before executing these commands.
+**Prerequisite:** Please ensure **Docker** is installed and the Docker daemon/engine is running before executing these commands.
 
 1. **Configure Environment Variables:**
    Copy the deployment environment file to the root directory:
