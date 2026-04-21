@@ -13,7 +13,6 @@ on:
     branches: ["**"]
   workflow_dispatch:
 
-# Avoid stacking redundant runs on the same branch.
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -51,16 +50,14 @@ jobs:
       - name: Run Jest unit tests
         env:
           NODE_ENV: test
-          # These match tests/setup.js so the env validator and JWT helpers
-          # never need to talk to a real service. No DB connection is made.
-          JWT_SECRET: test-secret-key-that-is-at-least-32-characters-long-for-jwt
+          JWT_SECRET: test
           JWT_EXPIRES_IN: 7d
           MONGODB_URI: mongodb://localhost:27017/soulsupport-test
           FRONTEND_URL: http://localhost:3000
           EMAIL_DISABLE: "true"
-          CLOUDINARY_CLOUD_NAME: test-cloud
-          CLOUDINARY_API_KEY: test-key
-          CLOUDINARY_API_SECRET: test-secret
+          CLOUDINARY_CLOUD_NAME: test
+          CLOUDINARY_API_KEY: test
+          CLOUDINARY_API_SECRET: test
         run: npm test -- --ci
 
       - name: Upload backend coverage report

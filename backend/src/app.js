@@ -11,32 +11,25 @@ const app = express();
 // express-rate-limit reads the real client IP from X-Forwarded-For.
 app.set('trust proxy', process.env.TRUST_PROXY === 'true' || !process.env.TRUST_PROXY ? 1 : process.env.TRUST_PROXY);
 
-const allowedOrigins = [
+const allowedOrigins = new Set([
   'https://soulsupport.utkarshcode.com',
   'https://soul-support-hazel.vercel.app',
   'http://localhost:3000',
-];
+]);
 
-// Manual CORS middleware — bypasses cors package (incompatible with Express 5)
 app.use((req, res, next) => {
   const origin = req.headers.origin;
 
-  const isAllowed =
-    origin &&
-    (allowedOrigins.includes(origin) ||
-      /^http:\/\/localhost:\d+$/.test(origin) ||
-      /\.vercel\.app$/.test(origin));
-
-  if (isAllowed) {
+  if (origin && allowedOrigins.has(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Vary', 'Origin');
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   } else if (origin) {
     console.warn(`[CORS] Blocked: ${origin}`);
   }
 
-  // Handle preflight
   if (req.method === 'OPTIONS') {
     return res.sendStatus(204);
   }
