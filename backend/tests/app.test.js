@@ -47,13 +47,12 @@ describe('App pipeline (no DB)', () => {
       expect(res.headers['access-control-allow-credentials']).toBe('true');
     });
 
-    it('echoes Access-Control-Allow-Origin for vercel.app preview origins', async () => {
+    it('echoes Access-Control-Allow-Origin for the allowed production origin', async () => {
       const res = await request(app)
-        .get('/health')
-        .set('Origin', 'https://my-preview.vercel.app');
-      expect(res.headers['access-control-allow-origin']).toBe('https://my-preview.vercel.app');
-    });
-
+      .get('/health')
+      .set('Origin', 'https://soul-support-hazel.vercel.app');
+    expect(res.headers['access-control-allow-origin']).toBe('https://soul-support-hazel.vercel.app');
+   });
     it('does not set Access-Control-Allow-Origin for disallowed origins', async () => {
       const res = await request(app)
         .get('/health')

@@ -11,23 +11,24 @@ const app = express();
 // express-rate-limit reads the real client IP from X-Forwarded-For.
 app.set('trust proxy', process.env.TRUST_PROXY === 'true' || !process.env.TRUST_PROXY ? 1 : process.env.TRUST_PROXY);
 
-const allowedOrigins = new Set([
-  'https://soulsupport.utkarshcode.com',
-  'https://soul-support-hazel.vercel.app',
-  'http://localhost:3000',
-]);
+const corsOriginMap = {
+  'https://soulsupport.utkarshcode.com': 'https://soulsupport.utkarshcode.com',
+  'https://soul-support-hazel.vercel.app': 'https://soul-support-hazel.vercel.app',
+  'http://localhost:3000': 'http://localhost:3000',
+};
 
 app.use((req, res, next) => {
-  const origin = req.headers.origin;
+  const requestOrigin = req.headers.origin;
+  const allowedOrigin = requestOrigin ? corsOriginMap[requestOrigin] : undefined;
 
-  if (origin && allowedOrigins.has(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
+  if (allowedOrigin) {
+    res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
     res.setHeader('Vary', 'Origin');
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  } else if (origin) {
-    console.warn(`[CORS] Blocked: ${origin}`);
+  } else if (requestOrigin) {
+    console.warn(`[CORS] Blocked: ${requestOrigin}`);
   }
 
   if (req.method === 'OPTIONS') {
