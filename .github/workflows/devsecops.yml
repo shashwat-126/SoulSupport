@@ -1,0 +1,93 @@
+name: SoulSupport DevSecOps
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+  workflow_dispatch:
+
+jobs:
+  semgrep:
+    name: Semgrep SAST
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Semgrep
+        uses: semgrep/semgrep-action@v1
+        with:
+          config: >-
+            p/javascript
+            p/nodejs
+            p/secrets
+            p/owasp-top-ten
+
+  gitleaks:
+    name: Gitleaks Secret Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+
+  trivy-fs:
+    name: Trivy Filesystem Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Trivy filesystem scan
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          format: table
+          exit-code: 1
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
+
+  docker-scan:
+    name: Build and scan Docker images
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build backend image
+        run: docker build -t soulsupport-backend:ci ./backend
+
+      - name: Build frontend image
+        run: docker build -t soulsupport-frontend:ci ./frontend
+
+      - name: Trivy backend image scan
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: soulsupport-backend:ci
+          format: table
+          exit-code: 1
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
+
+      - name: Trivy frontend image scan
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: soulsupport-frontend:ci
+          format: table
+          exit-code: 1
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
+
+  zap-baseline:
+    name: OWASP ZAP Baseline Scan
+    runs-on: ubuntu-latest
+    if: ${{ secrets.ZAP_TARGET_URL != '' }}
+    steps:
+      - name: Run baseline scan against deployed URL
+        uses: zaproxy/action-baseline@v0.12.0
+        with:
+          target: ${{ secrets.ZAP_TARGET_URL }}

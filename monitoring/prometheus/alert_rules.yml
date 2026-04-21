@@ -1,0 +1,38 @@
+groups:
+  - name: soulsupport-alerts
+    rules:
+      - alert: FrontendDown
+        expr: probe_success{instance="http://frontend:3000"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Frontend is down"
+          description: "SoulSupport frontend did not respond with a healthy HTTP status for 1 minute."
+
+      - alert: BackendDown
+        expr: probe_success{instance="http://backend:5007/health"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Backend health endpoint is down"
+          description: "SoulSupport backend /health did not respond with a healthy HTTP status for 1 minute."
+
+      - alert: HighHostMemory
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) > 0.85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High host memory usage"
+          description: "Host memory usage is above 85% for 5 minutes."
+
+      - alert: HighContainerCPU
+        expr: rate(container_cpu_usage_seconds_total{name!=""}[5m]) > 0.8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High container CPU usage"
+          description: "A running container is consuming high CPU for 5 minutes."
