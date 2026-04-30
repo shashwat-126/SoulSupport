@@ -11,17 +11,11 @@ const app = express();
 // express-rate-limit reads the real client IP from X-Forwarded-For.
 app.set('trust proxy', process.env.TRUST_PROXY === 'true' || !process.env.TRUST_PROXY ? 1 : process.env.TRUST_PROXY);
 
-//const corsOriginMap = {
-//  'https://soulsupport.utkarshcode.com': 'https://soulsupport.utkarshcode.com',
-//  'https://soul-support-hazel.vercel.app': 'https://soul-support-hazel.vercel.app',
- // 'http://localhost:3000': 'http://localhost:3000',
-// };
-
-const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [];
-
-const corsOriginMap = Object.fromEntries(
-  allowedOrigins.map(origin => [origin, origin])
-);
+const corsOriginMap = {
+  'https://soulsupport.utkarshcode.com': 'https://soulsupport.utkarshcode.com',
+  'https://soul-support-hazel.vercel.app': 'https://soul-support-hazel.vercel.app',
+  'http://localhost:3000': 'http://localhost:3000',
+};
 
 app.use((req, res, next) => {
   const requestOrigin = req.headers.origin;

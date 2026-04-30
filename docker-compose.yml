@@ -4,6 +4,8 @@ services:
     image: mongo:6
     container_name: soulsupport-mongodb
     restart: unless-stopped
+    ports:
+      - "27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME:-admin}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-password}
