@@ -5,32 +5,46 @@ global:
 rule_files:
   - /etc/prometheus/alert_rules.yml
 
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager:9093
+
 scrape_configs:
+  # Prometheus itself
   - job_name: prometheus
     static_configs:
       - targets: ["prometheus:9090"]
 
+  # Node Exporter (host metrics)
   - job_name: node-exporter
     static_configs:
       - targets: ["node-exporter:9100"]
 
+  # cAdvisor (containers)
   - job_name: cadvisor
     static_configs:
       - targets: ["cadvisor:8080"]
 
+  # Blackbox HTTP probing (IMPORTANT FIXED)
   - job_name: blackbox-http
     metrics_path: /probe
     params:
       module: [http_2xx]
+
     static_configs:
       - targets:
-          - http://frontend:3000
-          - http://backend:5007/health
-          - http://nginx
+          - http://soulsupport-web:3000
+          - http://soulsupport-api:5007/health
+          - http://soulsupport-nginx:80
+
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
+
       - source_labels: [__param_target]
         target_label: instance
+
       - target_label: __address__
-        replacement: blackbox-exporter:9115
+        replacement: soulsupport-blackbox:9115
