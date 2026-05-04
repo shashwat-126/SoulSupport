@@ -13,7 +13,7 @@ function assertNoLocalhostInProduction(url, keyName) {
 }
 
 export function getPublicApiBaseUrl() {
-  const raw = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+  const raw = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5007/api';
   const normalized = stripTrailingSlash(raw);
 
   if (!process.env.NEXT_PUBLIC_API_URL && isProduction()) {

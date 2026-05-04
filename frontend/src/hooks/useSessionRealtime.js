@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { getAuthToken } from '@/lib/authToken';
 
 function getRealtimeUrl(token) {
-  const apiBase = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api').replace(/\/$/, '');
+  const apiBase = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5007/api').replace(/\/$/, '');
   return `${apiBase}/sessions/stream?token=${encodeURIComponent(token)}`;
 }
 
