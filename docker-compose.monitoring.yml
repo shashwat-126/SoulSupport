@@ -81,7 +81,6 @@ services:
       - soulsupport-network
 
 
-  # 🔥 NEW: LOG AGGREGATION (NO CODE CHANGE REQUIRED)
   loki:
     image: grafana/loki:latest
     container_name: soulsupport-loki
@@ -92,9 +91,6 @@ services:
       - soulsupport-network
 
 
-
-
-  # 🚨 NEW: ALERT MANAGER
   alertmanager:
     image: prom/alertmanager:latest
     container_name: soulsupport-alertmanager

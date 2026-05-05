@@ -70,28 +70,22 @@ const HOW_IT_WORKS = [
 
 const TEAM = [
   {
-    name: "Utkarsh Patel",
-    role: "Founder & Lead Developer",
-    seed: "utkarsh-patel",
-    credibility: "Drives platform vision and core development.",
-  },
-  {
     name: "Sanjay J",
-    role: "Backend Engineer",
+    role: "CI/CD",
     seed: "sanjay-j",
-    credibility: "Builds scalable backend systems and API architecture.",
+    credibility: "Pipelines, Automation & Backend Infrastructure",
   },
   {
-    name: "Praneel Sindhole",
-    role: "Frontend Engineer",
-    seed: "praneel-sindhole",
-    credibility: "Crafts intuitive user interfaces and experiences.",
+    name: "Likhitha Rajuri",
+    role: "Containerization",
+    seed: "likhitha-rajuri",
+    credibility: "Containers, Orchestration & Distributed Systems",
   },
   {
-    name: "Ojasvi Poonia",
-    role: "Full Stack Developer",
-    seed: "ojasvi-poonia",
-    credibility: "Bridges frontend and backend for seamless delivery.",
+    name: "Shashwat Kumar",
+    role: "Monitoring & Security",
+    seed: "shashwat-kumar",
+    credibility: "Observability, Incident Response & Reliability",
   },
 ];
 
